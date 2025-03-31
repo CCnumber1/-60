@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>小月の煎饼物语🥞</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --pink: #ff6b6b;
+            --yellow: #fff3b0;
+        }
+        body {
+            margin: 0;
+            background: #fff5f5;
+            font-family: 'Comic Sans MS', system-ui;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .page {
+            display: none;
+            padding: 20px;
+            min-height: 100vh;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        #homePage {
+            background: linear-gradient(135deg, #ffdde1, #fff3e0);
+            position: relative;
+        }
+        .stars::before {
+            content: "✨✨✨";
+            position: absolute;
+            font-size: 24px;
+            animation: sparkle 2s infinite;
+        }
+        #passwordPage {
+            background: linear-gradient(45deg, #2c3e50, #3498db);
+            color: white;
+        }
+        #cookingPage {
+            background: url(https://img.zcool.cn/community/01b2fc5d3ae147a8012187f4162a5a.jpg) center/cover;
+        }
+        .progress-container {
+            width: 80%;
+            height: 30px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 15px;
+            margin: 30px auto;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 15px var(--pink);
+        }
+        .progress-bar {
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #ff9f43);
+            transition: 2s;
+            position: relative;
+        }
+        .progress-bar::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent 25%, 
+                rgba(255,255,255,0.3) 50%,
+                transparent 75%);
+            animation: shine 1.5s infinite;
+        }
+        .ingredient-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            padding: 20px;
+        }
+        .ingredient {
+            background: rgba(255,255,255,0.95);
+            padding: 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 2px solid transparent;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .ingredient.selected {
+            background: #ffebee;
+            transform: rotate(2deg) scale(1.05);
+            border-color: var(--pink);
+        }
+        #awardPage {
+            background: linear-gradient(45deg, #ff6b6b, #ff9f43);
+            color: white;
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: currentColor;
+            animation: confettiFall 3s infinite;
+        }
+        .speech-bubble {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(255,107,107,0.1);
+            text-align: left;
+            line-height: 1.8;
+            margin: 20px;
+        }
+        .highlight {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+        .btn {
+            padding: 15px 30px;
+            border-radius: 25px;
+            border: none;
+            background: white;
+            font-size: 18px;
+            color: var(--pink);
+            margin: 15px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255,107,107,0.2);
+            transition: 0.3s;
+        }
+        @keyframes sparkle {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(-100vh) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(10px); }
+            50% { transform: translateX(-10px); }
+            75% { transform: translateX(5px); }
+            100% { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 首页 -->
+    <div id="homePage" class="page">
+        <div class="stars"></div>
+        <h1 style="padding-top: 30vh;">✨ 小熊の厨房 ✨</h1>
+        <button class="btn" onclick="showPage('passwordPage')">开启冒险</button>
+        <button class="btn" onclick="hammerTime()">拒绝挑战</button>
+        <p style="color: #666;margin-top: 20px;">（据说点右边会有神秘小熊出现）</p>
+    </div>
+
+    <!-- 锤击彩蛋 -->
+    <div id="hammerPage" class="page">
+        <div style="font-size: 60px;animation: hammerHit 0.5s">给小月来一锤😵‍🔨</div>
+        <h2 style="color: var(--pink)">专治反骨仔🤭</h2>
+    </div>
+
+    <!-- 密码页 -->
+    <div id="passwordPage" class="page">
+        <div style="padding-top: 25vh;">
+            <h2>🌌 时空密码锁 🌌</h2>
+            <p>输入那个特殊日期的数字编码<br>（6位数字）</p>
+            <input type="number" id="pwdInput" 
+                   style="width: 200px; padding: 12px; border-radius: 20px; margin: 20px;"
+                   placeholder="🌙🌙🌙🌙🌙🌙">
+            <div>
+                <button class="btn" onclick="checkPassword()">🔓️解锁厨房</button>
+                <p id="hint" style="color: #ffcccc; height: 20px;"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 厨房页（已修复验证逻辑） -->
+    <div id="cookingPage" class="page">
+        <h2 style="background: rgba(255,255,255,0.9);padding: 15px;margin: 20px;border-radius: 20px;">🥞 小月，小月告诉我这世界最好吃的煎饼果子加！神！马？ 🧙‍♀️</h2>
+        <p style="color: #666;">选出最搭的5种食材！</p>
+        <div class="ingredient-grid">
+            <div class="ingredient" onclick="toggleSelect(this)">
+                <h3>🌭 魔法香肠</h3>
+                <p>会跳舞的维也纳风味</p>
+            </div>
+            <div class="ingredient" onclick="toggleSelect(this)">
+                <h3>💣 芥末炸弹</h3>
+                <p>勇敢者的挑战</p>
+            </div>
+            <div class="ingredient" onclick="toggleSelect(this)">
+                <h3>🍳 太阳煎蛋</h3>
+                <p>清晨的第一缕阳光</p>
+            </div>
+            <div class="ingredient" onclick="toggleSelect(this)">
+                <h3>🥨 黄金脆饼</h3>
+                <p>咔嚓响的快乐源泉</p>
+            </div>
+            <div class="ingredient" onclick="toggleSelect(this)">
+                <h3>🍃 香菜精灵</h3>
+                <p>争议性神秘嘉宾</p>
+            </div>
+            <div class="ingredient" onclick="toggleSelect(this)">
+                <h3>🥩 月光里脊</h3>
+                <p>沐浴过月光的嫩肉</p>
+            </div>
+            <div class="ingredient" onclick="toggleSelect(this)">
+                <h3>🌶️ 火焰辣条</h3>
+                <p>来自东方的神秘力量</p>
+            </div>
+
+        </div>
+        <button class="btn" onclick="checkRecipe()">点火烹饪！</button>
+        <p id="errorMsg" style="color: var(--pink); height: 30px;"></p>
+    </div>
+
+    <!-- 颁奖页 -->
+    <div id="awardPage" class="page">
+        <div style="padding-top: 20vh;">
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+            <div id="awardText" style="font-size: 1.5em; padding: 20px;">
+                <div class="confetti" style="left:10%;"></div>
+                <div class="confetti" style="left:30%;"></div>
+                <div class="confetti" style="left:50%;"></div>
+                <div class="confetti" style="left:70%;"></div>
+                <div class="confetti" style="left:90%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 致辞页 -->
+    <div id="speechPage" class="page">
+        <div class="speech-bubble">
+            <h2 style="text-align:center;color:#ff6b6b">🎉 恭喜通关！🎉</h2>
+            <p>致我们——<br>            
+            <p>虽然今天是愚人节，但有一件事我从来没开玩笑——<br>
+            <span class="highlight">"认识你，是我最大的幸运🍀。"</span></p>
+
+            <p>六十天前，我们在茫茫人海中偶然相遇。那时我从未想过，屏幕另一端那个素未谋面的灵魂，会成为照亮我生活的星辰。<br>
+            都说时间是最好的丈量者，可我们却像是被命运折叠了时光。深夜的剧集里交织着我们的笑声，凌晨的对话框见证过彼此的泪光。记得你说"我们很像"，其实我偷偷把这句话刻在了心里——原来真的存在某种默契，能让两个孤独的星球在相遇的瞬间就产生引力。<br>
+           那天你拨通电话时的哽咽声，至今还缠绕在我的耳畔。我捧着手机站在窗前，看路灯在雨幕里晕开光晕，突然明白沉默有时比语言更有温度。就像你总能在我的文字里读出未说出口的疲惫，就像我渐渐学会在你逞强时递上一杯温热的茶。<br>
+我们争执过，赌气过，像两只固执的刺猬互相试探安全的距离。可当你说"我们在互相救赎"时，我忽然看清了那些眼泪背后的珍贵——不是天生契合的完美，而是笨拙却真诚的靠近。你教会我倾听不只是用耳朵，而是用整颗心脏去感受震颤；我也在学着把尖锐的猜疑，换成张开双臂的等待。<br>
+           此刻暮色四合，我又想起我们对着屏幕碰杯的夜晚。琥珀色的酒液里摇晃着两个灵魂的倒影，六十天的光阴竟酿出了经年的醇香。</p>
+
+           <p>未来的日子里，或许还会有骤雨突袭🌧️，<br>
+           但只要我们记得☔️：<br>
+           当黑暗降临时，永远有人会为你留一盏不熄灭的灯🪔。</p>
+
+           <p > 敬这不可思议的相遇✨<br>
+            敬所有未完待续的章节✨</p>
+        </div>
+    </div>
+
+    <script>
+        // 初始化显示首页
+        showPage('homePage');
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+            document.getElementById(pageId).style.display = 'block';
+            
+            if(pageId === 'awardPage') {
+                document.querySelector('.progress-bar').style.width = '100%';
+                setTimeout(() => {
+                    document.getElementById('awardText').innerHTML = `
+                        <h1>🏆 恭喜小月🐷被评为 🏆</h1>
+                        <p style="font-size:1.8em">🍖 年度最美大馋丫头 🥪</p>
+                        <button class="btn" onclick="showPage('speechPage')">查收✉️ 信件</button>
+                    `;
+                }, 2000);
+            }
+        }
+
+        function hammerTime() {
+            showPage('hammerPage');
+            setTimeout(() => showPage('homePage'), 1500);
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('pwdInput').value;
+            const hint = document.getElementById('hint');
+            if(input === '250131') {
+                showPage('cookingPage');
+                hint.textContent = '';
+            } else {
+                hint.textContent = '❌ 密码错误！请回忆相遇的那天...';
+                hint.style.animation = 'shake 0.5s';
+                setTimeout(() => hint.style.animation = '', 500);
+            }
+        }
+
+        function toggleSelect(el) {
+            el.classList.toggle('selected');
+            document.getElementById('errorMsg').textContent = '';
+        }
+
+        // 已修复的厨房验证逻辑 ✅
+        function checkRecipe() {
+            const requiredRecipes = [
+                "🌭 魔法香肠",
+                "🍳 太阳煎蛋", 
+                "🥨 黄金脆饼",
+                "🥩 月光里脊",
+                "🌶️ 火焰辣条"
+            ];
+
+            const selectedItems = Array.from(document.querySelectorAll('.selected'))
+                .map(item => item.querySelector('h3').textContent.trim());
+
+            const isCountValid = selectedItems.length === 5;
+            const isAllRequired = requiredRecipes.every(item => selectedItems.includes(item));
+            
+            if (isCountValid && isAllRequired) {
+                showPage('awardPage');
+            } else {
+                document.getElementById('errorMsg').innerHTML = 
+                    '🧸 小熊提示：需要<strong>精确选择</strong>以下5种食材：<br>' + 
+                    requiredRecipes.join('，');
+                document.getElementById('errorMsg').style.animation = 'shake 0.5s';
+            }
+        }
+    </script>
+</body>
+</html>
